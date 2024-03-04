@@ -72,7 +72,7 @@
             <input type="text" v-model="editUserData.lastname" class="border border-gray-300 p-2 mb-4 rounded-lg w-full" placeholder="นามสกุล">
             <input type="text" v-model="editUserData.phoneNo" class="border border-gray-300 p-2 mb-4 rounded-lg w-full" placeholder="เบอร์โทร">
             <input type="text" v-model="editUserData.gender" class="border border-gray-300 p-2 mb-4 rounded-lg w-full" placeholder="เพศ">
-            <input type="text" v-model="editUserData.role" class="border border-gray-300 p-2 mb-4 rounded-lg w-full" placeholder="บทบาท">
+
   
             <!-- ปุ่มยืนยันการแก้ไข -->
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">บันทึก</button>
@@ -83,58 +83,63 @@
   </template>
   
   <script>
-  import axios from 'axios';
+
   
-  export default {
-    data() {
-      return {
-        users: [],
-        searchQuery: '',
-        isEditing: false,
-        editUserData: {}
-      };
-    },
-    created() {
-      this.fetchUsers();
-    },
-    methods: {
-      async fetchUsers() {
-        try {
-          const response = await axios.get('http://localhost:3000/api/v1/users'); // เปลี่ยนเส้นทางไปยัง API ของคุณ
-          this.users = response.data.users;
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        }
-      },
-      editUser(user) {
-        this.isEditing = true;
-        this.editUserData = { ...user };
-      },
-      async updateUser() {
-        try {
-          const userId = this.editUserData._id;
-          const response = await axios.patch(`http://localhost:3000/api/v1/users/${userId}`, this.editUserData);
-          console.log('Update user:', response.data);
-          this.isEditing = false;
-          this.fetchUsers();
-        } catch (error) {
-          console.error('Error updating user:', error);
-        }
+import axios from 'axios';
+import { GETALLUSERS_API, UPDATEUSERS_API, baseURL } from '@/APIgate'; // นำเข้า URL ของ API และ baseURL ผ่านการใช้ module
+
+export default {
+  data() {
+    return {
+      users: [], // ข้อมูลผู้ใช้ที่ได้รับมาจาก API
+      searchQuery: '', // คำค้นหาที่ผู้ใช้ป้อน
+      isEditing: false, // สถานะของการแก้ไขข้อมูลผู้ใช้ผ่าน Modal
+      editUserData: {} // ข้อมูลผู้ใช้ที่ถูกเลือกสำหรับการแก้ไข
+    };
+  },
+  created() {
+    this.fetchUsers(); // เมื่อ component ถูกสร้างขึ้นมา ให้ดึงข้อมูลผู้ใช้จาก API
+  },
+  methods: {
+    async fetchUsers() {
+      try {
+        const response = await axios.get(`${baseURL}${GETALLUSERS_API}`); // เรียกใช้ API เพื่อดึงข้อมูลผู้ใช้
+        this.users = response.data.users; // กำหนดข้อมูลผู้ใช้ให้กับตัวแปร users
+      } catch (error) {
+        console.error('Error fetching users:', error);
       }
     },
-    computed: {
-      filteredUsers() {
-        return this.users.filter(user => {
-          return user.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-            user.username.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-            user.firstname.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-            user.lastname.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-            user.phoneNo.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-            user.gender.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-            user.role.toLowerCase().includes(this.searchQuery.toLowerCase());
-        });
+    editUser(user) {
+      this.isEditing = true; // เปลี่ยนสถานะ isEditing เป็น true เพื่อแสดง Modal สำหรับการแก้ไข
+      this.editUserData = { ...user }; // กำหนดข้อมูลผู้ใช้ที่ถูกเลือกไว้ใน editUserData เพื่อให้แสดงใน Modal
+    },
+    async updateUser() {
+      try {
+        const userId = this.editUserData._id; // รหัสผู้ใช้ที่จะถูกแก้ไข
+        const response = await axios.patch(`${baseURL}${UPDATEUSERS_API}/${userId}`, this.editUserData); // ส่งข้อมูลผู้ใช้ที่แก้ไขไปยัง API
+        console.log('Update user:', response.data); // แสดงข้อมูลผู้ใช้ที่ถูกอัปเดตในคอนโซล
+        this.isEditing = false; // เปลี่ยนสถานะ isEditing เป็น false เพื่อซ่อน Modal หลังจากการแก้ไขเสร็จสมบูรณ์
+        this.fetchUsers(); // ดึงข้อมูลผู้ใช้ใหม่หลังจากการแก้ไขเสร็จสมบูรณ์
+      } catch (error) {
+        console.error('Error updating user:', error);
       }
     }
-  };
+  },
+  computed: {
+    filteredUsers() {
+      // ฟังก์ชันที่ใช้สำหรับกรองข้อมูลผู้ใช้ตามคำค้นหาของผู้ใช้
+      return this.users.filter(user => {
+        return user.email.toLowerCase().includes(this.searchQuery.toLowerCase()) || // กรองตามอีเมล์
+          user.username.toLowerCase().includes(this.searchQuery.toLowerCase()) || // กรองตามชื่อผู้ใช้
+          user.firstname.toLowerCase().includes(this.searchQuery.toLowerCase()) || // กรองตามชื่อจริง
+          user.lastname.toLowerCase().includes(this.searchQuery.toLowerCase()) || // กรองตามนามสกุล
+          user.phoneNo.toLowerCase().includes(this.searchQuery.toLowerCase()) || // กรองตามเบอร์โทร
+          user.gender.toLowerCase().includes(this.searchQuery.toLowerCase()) || // กรองตามเพศ
+          user.role.toLowerCase().includes(this.searchQuery.toLowerCase()); // กรองตามบทบาท
+      });
+    }
+  }
+};
+
   </script>
   
