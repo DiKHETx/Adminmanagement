@@ -129,6 +129,14 @@ export default {
   components: {
     Table,
   },
+  beforeRouteEnter(to, from, next) {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      next("/");
+    } else {
+      next();
+    }
+  },
   methods: {},
 };
 </script>
