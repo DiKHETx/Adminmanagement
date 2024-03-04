@@ -76,6 +76,8 @@
   
             <!-- ปุ่มยืนยันการแก้ไข -->
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">บันทึก</button>
+            <!-- ปุ่มยกเลิกการแก้ไข -->
+          <button @click="cancelEdit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">ยกเลิก</button>
           </form>
         </div>
       </div>
@@ -123,6 +125,9 @@ export default {
       } catch (error) {
         console.error('Error updating user:', error);
       }
+    },
+    cancelEdit() {
+      this.isEditing = false; // ปิด Modal
     }
   },
   computed: {
