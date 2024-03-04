@@ -30,9 +30,9 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body; //email,password
+  const { username, password } = req.body; //username,password
 
-  const existUser = await userModel.findOne({ email: email });
+  const existUser = await userModel.findOne({ username: username });
 
   if (!existUser) {
     return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
