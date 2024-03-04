@@ -103,7 +103,7 @@ export default {
       })
         .then((res) => {
           console.log(res);
-          this.$router.push("/");({ name: "login" });
+          this.$router.push("/");
         })
         .catch((error) => {
           console.log(error);
