@@ -40,6 +40,8 @@
 // @ is an alias to /src
 import HelloWorld from "@/components/HelloWorld.vue";
 import axios from "axios";
+import {  LOGIN_API, baseURL } from '@/APIgate';
+
 
 export default {
   name: "HomeView",
@@ -58,7 +60,7 @@ export default {
     try {
       var res = await axios({
         method: "post",
-        url: url,
+        url:`${baseURL}${LOGIN_API}`,
         data: {
           username: this.formData.username,
           password: this.formData.password,

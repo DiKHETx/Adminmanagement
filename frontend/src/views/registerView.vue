@@ -8,35 +8,35 @@
         <div>
           <label for="username" class="block text-sm font-medium leading-6 text-gray-900">username</label>
           <div class="mt-2">
-            <input id="username" name="username" type="text" placeholder="username" v-model="formData.username" autocomplete="username" required
+            <input  type="text" placeholder="username" v-model="formData.username" autocomplete="username" required
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
         <div>
           <label for="username" class="block text-sm font-medium leading-6 text-gray-900">password</label>
           <div class="mt-2">
-            <input id="username" name="username" type="password" placeholder="password" v-model="formData.password" autocomplete="tom" required
+            <input  type="password" placeholder="password" v-model="formData.password" autocomplete="tom" required
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
         <div>
           <label for="username" class="block text-sm font-medium leading-6 text-gray-900">First name</label>
           <div class="mt-2">
-            <input id="username" name="username" type="text" placeholder="First name" v-model="formData.firstname" autocomplete="username" required
+            <input type="text" placeholder="First name" v-model="formData.firstname" autocomplete="username" required
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
         <div>
           <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Last name</label>
           <div class="mt-2">
-            <input id="username" name="username" type="text" placeholder="Last name" v-model="formData.lastname" autocomplete="loveyou" required
+            <input  type="text" placeholder="Last name" v-model="formData.lastname" autocomplete="loveyou" required
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
         <div>
           <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Phone</label>
           <div class="mt-2">
-            <input id="username" name="username" type="phone" placeholder="000-0000-000" v-model="formData.phone" autocomplete="username"
+            <input  type="phone" placeholder="000-0000-000" v-model="formData.phone" autocomplete="username"
               required
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
@@ -44,21 +44,18 @@
         <div>
           <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Mail</label>
           <div class="mt-2">
-            <input id="username" name="username" type="mail" placeholder="user01@test.com" v-model="formData.mail" autocomplete="username"
+            <input  type="mail" placeholder="user01@test.com" v-model="formData.mail" autocomplete="username"
               required
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
         <div>
           <label for="username" class="block text-sm font-medium leading-6 text-gray-900">gender</label>
-          <label class="inline-flex items-center ml-6">
-            <input type="radio" class="form-radio" v-model="formData.gender" name="accountType" value="false" />
-            <span class="ml-2">ชาย</span>
-          </label> <label class="inline-flex items-center ml-6">
-            <input type="radio" class="form-radio" v-model="formData.gender" name="accountType" value="false" />
-            <span class="ml-2">หญิง</span>
-          </label>
-
+          <div class="mt-2">
+            <input  type="text"  v-model="formData.gender" placeholder="ชาย,หญิง"  autocomplete="username"
+              required
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          </div>
         </div>
         <div>
           <button type="submit" v-on:click="SIGN_UP()"
@@ -71,8 +68,8 @@
 </template>
 
 <script>
-
 import axios from "axios";
+import { REGISTER_API, baseURL } from '@/APIgate';
 export default {
   name: "SingupView",
   data() {
@@ -82,9 +79,9 @@ export default {
         password: "",
         firstname: "",
         lastname: "",
-        phoneNum: "",
-        gender: null,
-        mail: "",
+        phoneNo: "",
+        gender: "",
+        email: "",
       },
     };
   },
@@ -93,20 +90,20 @@ export default {
     SIGN_UP() {
       axios({
         method: "post",
-        url: url,
+        url:`${baseURL}${REGISTER_API}`,
         data: {
           username: this.formData.username,
           password: this.formData.password,
           firstname: this.formData.firstname,
           lastname: this.formData.lastname,
-          phoneNum: this.formData.phone,
+          phoneNo: this.formData.phone,
           gender: this.formData.gender,
-          mail: this.formData.mail,
+          email: this.formData.mail,
         },
       })
         .then((res) => {
-          this.$router.push("/");
-          console.log(res.data);
+          console.log(res);
+          this.$router.push("/");({ name: "login" });
         })
         .catch((error) => {
           console.log(error);
