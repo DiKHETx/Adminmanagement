@@ -11,14 +11,14 @@ const routes = [
     path: "/register",
     name: "register",
     component: function () {
-      return import(/* webpackChunkName: "about" */ "../views/registerView.vue");
+      return import("../views/registerView.vue");
     },
   },
   {
     path: "/home",
     name: "homePage",
     component: function () {
-      return import(/* webpackChunkName: "about" */ "../views/homeView.vue");
+      return import("../views/homeView.vue");
     },
   },
 ];
