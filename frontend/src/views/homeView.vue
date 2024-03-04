@@ -117,6 +117,7 @@
       Submit
     </button>
   </form>
+  <Table/>
 </template>
 
 <script>
@@ -126,7 +127,7 @@ export default {
     return {};
   },
   components: {
-    Table,
+    Table
   },
   methods: {},
 };

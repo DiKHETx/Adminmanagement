@@ -3,10 +3,14 @@ const route = express.Router();
 const {
   login,
   register,
+  updateUser,
+  getAllUsers
 } = require("../controllers/users");
 
 route.post("/login", login);
 route.post("/register", register);
+route.patch('/:userId', updateUser);
 
+route.get("/", getAllUsers);
 
 module.exports = route;

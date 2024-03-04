@@ -2,11 +2,11 @@
 // const baseURL = "http://161.246.127.114" 
 
 ///Development///
-const baseURL = "http://localhost:3000";
+const baseURL = "http://localhost:3000/api/v1";
 
-const LOGIN_API = "/api/v1/users/login";
-
-const REGISTER_API = "/api/v1/users/register";
+const LOGIN_API = "/users/login";
+const REGISTER_API = "/users/register";
+const UPDATEUSERS_API = "/users/:userID";
 
 export {
     baseURL,

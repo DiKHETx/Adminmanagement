@@ -57,84 +57,45 @@ const login = async (req, res) => {
     .json({ message: "เข้าสู่ระบบสำเร็จ", accessToken: accessToken });
 };
 
-// const searchUser = async (req, res) => {
-//     try {
-//       // รับค่า parameter "Search" จาก query string
-//       const { Search } = req.query;
-  
-//       // สร้าง regular expression สำหรับการค้นหาที่ไม่ต้องการตรงตัว
-//       var regex = new RegExp(Search, "i");
-  
-//       // ทำการค้นหาข้อมูลผู้ใช้ที่ตรงกับเงื่อนไขด้านล่าง
-//       const search_data = await userModel.aggregate([
-//         {
-//           // ใช้ match เพื่อกรองข้อมูลที่ตรงกับเงื่อนไข
-//           $match: {
-//             $or: [
-//               { firstname: regex },
-//               { lastname: regex },
-//               { _id: regex },
-//               { email: regex },
-//               { phoneNo: regex },
-//               { idCard: regex },
-//             ],
-//           },
-//         },
-//         {
-//           // ใช้ lookup เพื่อดึงข้อมูลจาก collection "queues"
-//           $lookup: {
-//             from: "queues",
-//             localField: "_id",
-//             foreignField: "userId",
-//             as: "queues",
-//           },
-//         },
-//         {
-//           // ใช้ lookup เพื่อดึงข้อมูลจาก collection "health" และทำการจัดเรียงข้อมูล
-//           $lookup: {
-//             from: "health",
-//             localField: "_id",
-//             foreignField: "userId",
-//             as: "health",
-//             pipeline: [
-//               {
-//                 $sort: { createdAt: -1 },
-//               },
-//               {
-//                 $limit: 1,
-//               },
-//             ],
-//           },
-//         },
-//         {
-//           // ใช้ addFields เพื่อเพิ่ม field "health" และทำการดึงค่าจาก array
-//           $addFields: {
-//             health: {
-//               $arrayElemAt: ["$health", 0],
-//             },
-//           },
-//         },
-//         {
-//           // ใช้ addFields เพื่อเพิ่ม field "health" และกำหนดค่าเริ่มต้นในกรณีที่ไม่มีข้อมูล
-//           $addFields: {
-//             health: {
-//               $ifNull: ["$health", null],
-//             },
-//           },
-//         },
-//       ]);
-  
-//       // ส่งข้อมูลผลลัพธ์กลับในรูปแบบ JSON
-//       return res.status(200).json({ message: "ค้นหาสำเร็จ", Search: search_data });
-//     } catch (error) {
-//       // กรณีเกิดข้อผิดพลาดในการค้นหา
-//       return res.status(400).json({ message: "ค้นหาไม่สำเร็จ", error: error });
-//     }
-//   };
+const updateUser = async (req, res) => {
+  try {
+    const { userId } = req.params; // รับ userId ที่จะแก้ไขข้อมูล
+    const updates = req.body; // รับข้อมูลที่ต้องการแก้ไข
+
+    // ค้นหาผู้ใช้งานที่ต้องการแก้ไข
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
+    }
+
+    // อัพเดทข้อมูล
+    Object.keys(updates).forEach((key) => {
+      user[key] = updates[key];
+    });
+
+    // บันทึกการเปลี่ยนแปลง
+    const updatedUser = await user.save();
+
+    return res.status(200).json({ message: "อัพเดทข้อมูลสำเร็จ", user: updatedUser });
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.find();
+    return res.status(200).json({ users: users });
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
   
   module.exports = {
     login,
     register,
+    updateUser,
+    getAllUsers
     // searchUser,
   };
   
