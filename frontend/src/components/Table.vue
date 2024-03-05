@@ -28,6 +28,9 @@
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               แก้ไข
             </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              ลบ
+            </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -56,6 +59,9 @@
             <td class="px-6 py-4 whitespace-nowrap">
               <button @click="editUser(user)" class="text-indigo-600 hover:text-indigo-900">แก้ไข</button>
             </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+  <button @click="deleteUser(user._id)" class="text-red-600 hover:text-red-900">ลบ</button>
+</td>
           </tr>
         </tbody>
       </table>
@@ -86,9 +92,9 @@
   
   <script>
 
-  
+import Swal from 'sweetalert2';
 import axios from 'axios';
-import { GETALLUSERS_API, UPDATEUSERS_API, baseURL } from '@/APIgate'; // นำเข้า URL ของ API และ baseURL ผ่านการใช้ module
+import { DELETEUSERS_API, GETALLUSERS_API, UPDATEUSERS_API, baseURL } from '@/APIgate'; // นำเข้า URL ของ API และ baseURL ผ่านการใช้ module
 
 export default {
   data() {
@@ -128,7 +134,30 @@ export default {
     },
     cancelEdit() {
       this.isEditing = false; // ปิด Modal
+    },
+    // ฟังก์ชันสำหรับลบผู้ใช้งาน
+    async deleteUser(userId) {
+  try {
+    const { value: confirmDelete } = await Swal.fire({
+      title: 'คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้งานนี้?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    });
+
+    if (confirmDelete) {
+      const response = await axios.delete(`${baseURL}${DELETEUSERS_API}/${userId}`);
+      console.log('Deleted user:', response.data.user);
+      this.fetchUsers();
     }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+  }
+},
+
   },
   computed: {
     filteredUsers() {
