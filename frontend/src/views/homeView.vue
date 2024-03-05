@@ -2,7 +2,8 @@
   <div>
     <button type="submit" v-on:click="LOG_OUT"
       class="ml-auto my-2.5 flex w-64 justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-      Sign up </button>
+      LOG OUT 
+    </button>
   </div>
   <div class="max-w-md mx-auto flex flex-col">
     <div class="relative z-0 w-full mb-5 group">
@@ -100,8 +101,6 @@ export default {
     LOG_OUT() {
       localStorage.removeItem("accessToken");
       window.location.reload();
-      this.token = null;
-      this.checkAccessToken();
     },
     SIGN_UP() {
       if (this.formData.username === this.formData.email) {
