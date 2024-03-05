@@ -116,13 +116,34 @@ const deleteUsers = async (req, res) => {
   }
 };
 
+const searchUser = async (req, res) => {
+  try {
+    const { query } = req.query; // รับคำค้นหาจาก query string
+
+    // ค้นหาผู้ใช้โดยใช้เงื่อนไขที่ตรงกับ query string
+    const users = await userModel.find({
+      $or: [
+        { username: { $regex: query, $options: "i" } }, // ค้นหา username ที่ตรงกับ query
+        { firstname: { $regex: query, $options: "i" } }, // ค้นหาชื่อจริงที่ตรงกับ query
+        { lastname: { $regex: query, $options: "i" } }, // ค้นหานามสกุลที่ตรงกับ query
+        { email: { $regex: query, $options: "i" } } // ค้นหาอีเมล์ที่ตรงกับ query
+      ]
+    });
+
+    return res.status(200).json({ users: users });
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
+
+
   
   module.exports = {
     login,
     register,
     updateUser,
     getAllUsers,
-    deleteUsers
-    // searchUser,
+    deleteUsers,
+    searchUser,
   };
   
