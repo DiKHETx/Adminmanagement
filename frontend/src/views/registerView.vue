@@ -106,7 +106,7 @@ export default {
           this.$router.push("/");
         })
         .catch((error) => {
-          console.log("ไท่สำเร็จ", error);
+          console.log("ไม่สำเร็จ", error);
         });
     },
   },

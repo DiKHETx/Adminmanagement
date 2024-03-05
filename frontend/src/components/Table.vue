@@ -92,16 +92,22 @@
         <!-- ฟอร์มสำหรับแก้ไขข้อมูล -->
         <form @submit.prevent="updateUser">
           <!-- ป้อนข้อมูลแก้ไข -->
+          Email
           <input type="text" v-model="editUserData.email" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="อีเมล์">
+            Username
           <input type="text" v-model="editUserData.username" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="ชื่อผู้ใช้">
+            Firstname
           <input type="text" v-model="editUserData.firstname" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="ชื่อจริง">
+            Lastname
           <input type="text" v-model="editUserData.lastname" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="นามสกุล">
+            Phone
           <input type="text" v-model="editUserData.phoneNo" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="เบอร์โทร">
+            Gender
           <input type="text" v-model="editUserData.gender" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="เพศ">
 
