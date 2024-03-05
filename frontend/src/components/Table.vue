@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="my-2.5 mx-1 bg-gray-100 relative flex" data-twe-input-wrapper-init data-twe-input-group-ref>
-      <input type="search"
+      <input type="search" v-model="searchQuery"
         class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
         placeholder="Search" aria-label="Search" id="exampleFormControlInput" aria-describedby="basic-addon1" />
       <label for="exampleFormControlInput"
@@ -11,8 +11,8 @@
         class="relative z-[2] -ms-0.5 flex items-center rounded-e bg-primary px-5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
         type="button" id="button-addon1" data-twe-ripple-init data-twe-ripple-color="light">
         <span class="[&>svg]:h-5 [&>svg]:w-5">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="text-neutral-500"
-            stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            class="text-neutral-500" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
           </svg>
@@ -95,19 +95,19 @@
           Email
           <input type="text" v-model="editUserData.email" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="อีเมล์">
-            Username
+          Username
           <input type="text" v-model="editUserData.username" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="ชื่อผู้ใช้">
-            Firstname
+          Firstname
           <input type="text" v-model="editUserData.firstname" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="ชื่อจริง">
-            Lastname
+          Lastname
           <input type="text" v-model="editUserData.lastname" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="นามสกุล">
-            Phone
+          Phone
           <input type="text" v-model="editUserData.phoneNo" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="เบอร์โทร">
-            Gender
+          Gender
           <input type="text" v-model="editUserData.gender" class="border border-gray-300 p-2 mb-4 rounded-lg w-full"
             placeholder="เพศ">
 
@@ -152,7 +152,25 @@ export default {
   created() {
     this.fetchUsers(); // เมื่อ component ถูกสร้างขึ้นมา ให้ดึงข้อมูลผู้ใช้จาก API
   },
+  watch: {
+    searchQuery: function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.searchUsers();
+      }
+    }
+  },
+
   methods: {
+    async searchUsers() {
+      try {
+        const response = await axios.get(`${baseURL}/users/?Search=${this.searchQuery}`);
+        this.users = response.data.users;
+        console.log('Search successful:', this.users);
+      } catch (error) {
+        console.error('Error searching users:', error);
+      }
+    },
+
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
@@ -208,12 +226,13 @@ export default {
         if (confirmDelete) {
           const response = await axios.delete(`${baseURL}${DELETEUSERS_API}/${userId}`);
           console.log('Deleted user:', response.data.user);
-          this.fetchUsers();
+          this.searchUsers();
         }
       } catch (error) {
         console.error('Error deleting user:', error);
       }
     },
+
 
   },
   computed: {
