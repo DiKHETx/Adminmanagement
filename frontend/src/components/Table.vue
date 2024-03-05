@@ -2,8 +2,9 @@
   <div>
     <div class="my-2.5 mx-1 bg-gray-100 relative flex" data-twe-input-wrapper-init data-twe-input-group-ref>
       <input type="search" v-model="searchQuery"
-        class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-        placeholder="Search" aria-label="Search" id="exampleFormControlInput" aria-describedby="basic-addon1" />
+  class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary dark:text-black data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+  placeholder="Search" aria-label="Search" id="exampleFormControlInput" aria-describedby="basic-addon1" />
+
       <label for="exampleFormControlInput"
         class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">Search
       </label>
@@ -163,13 +164,30 @@ export default {
   methods: {
     async searchUsers() {
       try {
-        const response = await axios.get(`${baseURL}/users/?Search=${this.searchQuery}`);
+        let apiUrl = `${baseURL}${GETALLUSERS_API}`;
+
+        // Append search query if available
+        if (this.searchQuery) {
+          apiUrl += `?Search=${this.searchQuery}`;
+        }
+
+        const response = await axios.get(apiUrl);
+
         this.users = response.data.users;
-        console.log('Search successful:', this.users);
       } catch (error) {
-        console.error('Error searching users:', error);
+        console.error('Error fetching users:', error);
       }
     },
+
+    // async searchUsers() {
+    //   try {
+    //     const response = await axios.get(`${baseURL}/users/?Search=${this.searchQuery}`);
+    //     this.users = response.data.users;
+    //     console.log('Search successful:', this.users);
+    //   } catch (error) {
+    //     console.error('Error searching users:', error);
+    //   }
+    // },
 
     nextPage() {
       if (this.currentPage < this.totalPages) {
@@ -226,12 +244,21 @@ export default {
         if (confirmDelete) {
           const response = await axios.delete(`${baseURL}${DELETEUSERS_API}/${userId}`);
           console.log('Deleted user:', response.data.user);
-          this.searchUsers();
+
+          // Check if a search query is present
+          if (this.searchQuery) {
+            // Fetch users again to update the table with original data
+            this.fetchUsers();
+          } else {
+            // Remove the deleted user from the table directly
+            this.users = this.users.filter(user => user._id !== userId);
+          }
         }
       } catch (error) {
         console.error('Error deleting user:', error);
       }
     },
+
 
 
   },
