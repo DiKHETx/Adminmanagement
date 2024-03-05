@@ -40,7 +40,7 @@
         </div>
       </div>
       <div>
-        <label class="block text-sm font-medium leading-6 text-gray-900">Mail</label>
+        <label class="block text-sm font-medium leading-6 text-gray-900">Email</label>
         <div class="mt-2">
           <input type="email" placeholder="user01@test.com" v-model="formData.mail"
             class="px-2.5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -55,7 +55,7 @@
       </div>
       <div>
         <button type="submit" v-on:click="SIGN_UP"
-          class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          class="my-2.5 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
           Sign up </button>
       </div>
     </div>
@@ -83,6 +83,11 @@ export default {
 
   methods: {
     SIGN_UP() {
+      if (this.formData.username === this.formData.mail) {
+        console.log("username และ email ต้องไม่เหมือนกัน");
+        alert("Username และ Email ต้องไม่เหมือนกัน");
+        return;
+      }
       axios({
         method: "post",
         url: `${baseURL}${REGISTER_API}`,
