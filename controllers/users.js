@@ -82,6 +82,7 @@ const updateUser = async (req, res) => {
     return res.status(400).json(err);
   }
 };
+
 const getAllUsers = async (req, res) => {
   try {
     const users = await userModel.find();
@@ -90,12 +91,31 @@ const getAllUsers = async (req, res) => {
     return res.status(400).json(err);
   }
 };
+
+const deleteUsers = async (req, res) => {
+  try {
+    const { userId } = req.params; // รับ userId ที่ต้องการลบข้อมูล
+
+    // ค้นหาและลบผู้ใช้งานโดยใช้ _id
+    const deletedUser = await userModel.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "ไม่พบผู้ใช้งานที่ต้องการลบ" });
+    }
+
+    return res.status(200).json({ message: "ลบผู้ใช้งานเรียบร้อยแล้ว", user: deletedUser });
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
+
   
   module.exports = {
     login,
     register,
     updateUser,
-    getAllUsers
+    getAllUsers,
+    deleteUsers
     // searchUser,
   };
   

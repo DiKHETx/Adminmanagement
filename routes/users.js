@@ -4,7 +4,8 @@ const {
   login,
   register,
   updateUser,
-  getAllUsers
+  getAllUsers,
+  deleteUsers
 } = require("../controllers/users");
 
 route.post("/login", login);
@@ -12,5 +13,6 @@ route.post("/register", register);
 route.patch('/:userId', updateUser);
 
 route.get("/", getAllUsers);
+route.delete("/:userId", deleteUsers)
 
 module.exports = route;
