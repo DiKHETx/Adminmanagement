@@ -39,13 +39,6 @@
             {{ user.email }}
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <button @click="editUser(user)" class="text-indigo-600 hover:text-indigo-900">แก้ไข</button>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <button @click="deleteUser(user._id)" class="text-red-600 hover:text-red-900">ลบ</button>
-          </td>
-
-          <td class="px-6 py-4 whitespace-nowrap">
             {{ user.username }}
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
