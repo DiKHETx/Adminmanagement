@@ -6,15 +6,21 @@ const dayjs = require("dayjs");
 
 const register = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, username, password, role } = req.body;
 
     if (role != undefined) {
       return res.status(400).json({ message: "เกิดข้อผิดพลาด" });
     }
 
-    const existsUser = await userModel.findOne({ email: email });
+    // ตรวจสอบว่ามี username ซ้ำกันหรือไม่
+    const existsUsername = await userModel.findOne({ username: username });
+    if (existsUsername) {
+      return res.status(400).json({ message: "ชื่อผู้ใช้งานนี้มีผู้ใช้งานแล้ว" });
+    }
 
-    if (existsUser) {
+    // ตรวจสอบว่ามี email ซ้ำกันหรือไม่
+    const existsEmail = await userModel.findOne({ email: email });
+    if (existsEmail) {
       return res.status(400).json({ message: "มีผู้ใช้งานอยู่ในระบบ" });
     }
 
@@ -28,6 +34,7 @@ const register = async (req, res) => {
     return res.status(400).json(err);
   }
 };
+
 
 const login = async (req, res) => {
   const { username, password } = req.body; //username,password
