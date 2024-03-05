@@ -124,6 +124,7 @@ export default {
         .then((res) => {
           console.log("สมัครสำเร็จ", res);
           this.$router.push("/home");
+          window.location.reload(); 
         })
         .catch((error) => {
           console.log("ไม่สำเร็จ", error);
