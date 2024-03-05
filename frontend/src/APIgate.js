@@ -10,11 +10,15 @@ const UPDATEUSERS_API = "/users"; // `${userId}`
 const DELETEUSERS_API = "/users"; // `${userId}`
 const GETALLUSERS_API = "/users";
 
+//http://localhost:3000/api/v1/users/search?query="inputfilde"
+const SEARCHUSERS_API = "/users/search?query="; 
+
 export {
     baseURL,
     LOGIN_API,
     REGISTER_API,
     GETALLUSERS_API,
     UPDATEUSERS_API,
-    DELETEUSERS_API
+    DELETEUSERS_API,
+    SEARCHUSERS_API
 }
