@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const _init = async () => {
   mongoose
-    .connect("mongodb://localhost:27017/SciCOM")
+    .connect("mongodb://localhost:27017/KHET")
     .then((v) => {
       console.log("Connected to MongoDB");
     })
